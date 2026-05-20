@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HCIP — Housing Credit Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/dist/tabler-icons.min.css"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --dk:#0A2016;
+  --dk2:#132d1d;
+  --g1:#1a5e36;
+  --g2:#226b41;
+  --g3:rgba(26,94,54,0.09);
+  --g4:rgba(26,94,54,0.05);
+  --glt:#e6f0ea;
+  --au:#b8841e;
+  --au2:rgba(184,132,30,0.12);
+  --ault:#fdf3e0;
+  --red:#991b1b;
+  --redlt:rgba(153,27,27,0.09);
+  --warn:#92400e;
+  --warnlt:rgba(146,64,14,0.09);
+  --bg:#f5f6f5;
+  --surface:#ffffff;
+  --border:#dde3dd;
+  --border2:#e8ece8;
+  --text:#1a1f1a;
+  --text2:#4a524a;
+  --text3:#8a938a;
+  --br-sm:4px;
+  --br-md:7px;
+  --br-lg:11px;
+}
+body{font-family:var(--sans);color:var(--text);background:#eceeed;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:28px 16px}
+
+/* ── Shell ── */
+.shell{width:100%;max-width:1040px;border-radius:14px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,0.04),0 8px 40px rgba(0,0,0,0.1);border:1px solid rgba(0,0,0,0.07)}
+
+/* ── Topbar ── */
+.topbar{background:var(--dk);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tl{display:flex;align-items:center;gap:10px}
+.logomark{width:30px;height:30px;background:var(--g1);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logomark i{font-size:15px;color:#fff}
+.brand-name{font-size:13px;font-weight:600;color:#fff;letter-spacing:0.02em;font-family:var(--sans)}
+.brand-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--au);margin:0 3px 1px;vertical-align:middle}
+.brand-sub{font-size:10px;color:rgba(255,255,255,0.35);font-family:var(--mono);margin-top:1px;letter-spacing:0.02em}
+.live-pill{display:flex;align-items:center;gap:5px;padding:3px 9px;border:0.5px solid rgba(255,255,255,0.1);border-radius:20px;font-size:10px;color:rgba(255,255,255,0.38);font-family:var(--mono)}
+.live-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.nav{display:flex;gap:2px}
+.nt{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;color:rgba(255,255,255,0.4);background:transparent;border:none;font-family:var(--sans);transition:all 0.14s;letter-spacing:0.01em}
+.nt.on{background:var(--g1);color:#fff}
+.nt:hover:not(.on){color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.06)}
+
+/* ── Body grid ── */
+.body{display:grid;grid-template-columns:244px 1fr;min-height:540px}
+
+/* ── Rail ── */
+.rail{background:var(--surface);border-right:1px solid var(--border2);padding:14px;display:flex;flex-direction:column;gap:13px}
+.rl{font-size:9.5px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;font-family:var(--mono);margin-bottom:4px;font-weight:500}
+
+.bg2{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.bb{padding:6px 4px;border:1px solid var(--border2);border-radius:var(--br-md);font-size:11px;cursor:pointer;color:var(--text2);background:var(--bg);transition:all 0.12s;text-align:center;font-family:var(--sans);font-weight:500;outline:none}
+.bb.on{border-color:var(--g1);background:var(--g3);color:var(--g1)}
+.bb:hover:not(.on){border-color:var(--g1);color:var(--g1)}
+
+.inp-wrap{position:relative}
+.inp-wrap input{width:100%;padding:8px 32px 8px 10px;border:1px solid var(--border2);border-radius:var(--br-md);font-size:12px;background:var(--bg);color:var(--text);outline:none;transition:border 0.13s;font-family:var(--sans)}
+.inp-wrap input:focus{border-color:var(--g1);background:var(--surface)}
+.inp-wrap i{position:absolute;right:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+
+.pg2{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.pb{padding:6px 4px;border:1px solid var(--border2);border-radius:var(--br-md);font-size:11px;cursor:pointer;background:var(--bg);color:var(--text2);text-align:center;transition:all 0.12s;font-family:var(--sans);font-weight:500;outline:none}
+.pb.on{border-color:var(--au);background:var(--au2);color:var(--au)}
+.pb:hover:not(.on){border-color:var(--au);color:var(--au)}
+
+.runbtn{width:100%;padding:10px;background:var(--g1);border:none;border-radius:var(--br-md);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:background 0.13s;display:flex;align-items:center;justify-content:center;gap:5px;font-family:var(--sans);letter-spacing:0.01em}
+.runbtn:hover{background:var(--g2)}
+.runbtn:disabled{opacity:0.4;cursor:not-allowed}
+.div{height:1px;background:var(--border2)}
+
+.ri{padding:6px 7px;border-radius:var(--br-md);cursor:pointer;transition:background 0.11s}
+.ri:hover{background:var(--bg)}
+.ri-a{font-size:12px;font-weight:500;color:var(--text)}
+.ri-m{font-size:10px;color:var(--text3);font-family:var(--mono)}
+
+/* ── Main ── */
+.main{padding:15px;background:var(--bg);display:flex;flex-direction:column;gap:11px;overflow-y:auto;max-height:680px}
+
+/* ── Empty state ── */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:50px 20px;text-align:center}
+.empty-ico{font-size:28px;color:var(--g1);opacity:0.25}
+.empty-t{font-size:14px;font-weight:600;color:var(--text)}
+.empty-s{font-size:12px;color:var(--text2);max-width:210px;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:4px}
+.chip{padding:3px 10px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;background:var(--surface);color:var(--text2);transition:all 0.12s;font-family:var(--mono)}
+.chip:hover{border-color:var(--g1);color:var(--g1);background:var(--g3)}
+
+/* ── Cards ── */
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--br-lg);padding:13px 15px}
+.card-au{background:var(--surface);border:1px solid rgba(184,132,30,0.25);border-radius:var(--br-lg);padding:13px 15px}
+.sl{font-size:9.5px;font-family:var(--mono);letter-spacing:0.09em;color:var(--text3);text-transform:uppercase;margin-bottom:9px;font-weight:500}
+
+/* ── Flag row ── */
+.flag-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.flg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--mono);letter-spacing:0.01em}
+.fg{background:var(--g3);color:var(--g1)}
+.fa{background:var(--warnlt);color:var(--warn)}
+.fr{background:var(--redlt);color:var(--red)}
+.fn{background:var(--border2);color:var(--text3)}
+
+/* ── Score header ── */
+.rpt-addr{font-size:17px;font-weight:600;line-height:1.2;color:var(--text);font-family:var(--sans)}
+.rpt-sub{font-size:10.5px;color:var(--text3);font-family:var(--mono);margin-top:3px}
+.score-wrap{flex-shrink:0;text-align:center}
+.score-n{font-size:30px;font-weight:600;font-family:var(--mono);line-height:1}
+.score-l{font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:0.05em;margin-top:2px}
+.score-band{font-size:9.5px;padding:2px 8px;border-radius:20px;margin-top:5px;display:inline-block;font-family:var(--mono);font-weight:600}
+
+/* ── Sub scores ── */
+.sub4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:12px}
+.sc{background:var(--bg);border-radius:var(--br-md);padding:10px 8px;text-align:center;border:1px solid var(--border2)}
+.sc-n{font-size:18px;font-weight:600;font-family:var(--mono);line-height:1}
+.sc-l{font-size:10px;color:var(--text2);margin-top:3px;line-height:1.3}
+.sc-bar{height:3px;border-radius:2px;margin-top:6px}
+
+/* ── Metric 4-grid ── */
+.m4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--br-md);padding:10px 11px}
+.ml{font-size:9.5px;color:var(--text3);font-family:var(--mono);letter-spacing:0.04em;margin-bottom:3px}
+.mv{font-size:16px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.md{font-size:10px;margin-top:2px;font-family:var(--mono)}
+.mgreen{color:var(--g1)}.mred{color:var(--red)}.mwarn{color:var(--warn)}.mgrey{color:var(--text3)}
+
+/* ── Briefing box ── */
+.briefing{border-left:3px solid var(--au);padding:11px 14px;background:rgba(184,132,30,0.04);border-radius:0 var(--br-md) var(--br-md) 0}
+.brief-hdr{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.brief-dot{width:6px;height:6px;border-radius:50%;background:var(--au);animation:blink 2s infinite}
+.brief-lbl{font-size:9.5px;font-family:var(--mono);color:var(--au);letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
+.brief-disc{font-size:9.5px;color:var(--text3);font-family:var(--mono);margin-left:auto}
+.brief-txt{font-size:12.5px;line-height:1.75;color:var(--text2)}
+
+/* ── Two-col ── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+
+/* ── Property row ── */
+.pm-row{display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--bg);border-radius:var(--br-md);margin-bottom:4px}
+.pm-name{font-size:11.5px;color:var(--text2);flex:1}
+.pm-val{font-size:11.5px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.pm-tag{font-size:9.5px;padding:2px 7px;border-radius:20px;font-family:var(--mono);font-weight:600;flex-shrink:0}
+.tg{background:var(--g3);color:var(--g1)}
+.ta{background:var(--warnlt);color:var(--warn)}
+.tr{background:var(--redlt);color:var(--red)}
+
+/* ── Obs rows ── */
+.obs{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:var(--br-md);border:1px solid;margin-bottom:5px}
+.obs-r{background:rgba(153,27,27,0.03);border-color:rgba(153,27,27,0.15)}
+.obs-a{background:rgba(146,64,14,0.03);border-color:rgba(146,64,14,0.18)}
+.obs-g{background:rgba(26,94,54,0.03);border-color:rgba(26,94,54,0.15)}
+.obs i{font-size:13px;flex-shrink:0;margin-top:1px}
+.obs-r i{color:var(--red)}.obs-a i{color:var(--warn)}.obs-g i{color:var(--g1)}
+.obs-body{font-size:11.5px;line-height:1.6;color:var(--text2)}
+.obs-body strong{font-weight:600;color:var(--text)}
+
+/* ── Scenario table ── */
+.scen-tbl{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.scen-tbl th{padding:5px 6px;font-family:var(--mono);font-weight:600;color:var(--text3);border-bottom:1px solid var(--border2);font-size:9.5px;text-align:left;letter-spacing:0.04em;text-transform:uppercase}
+.scen-tbl td{padding:6px 6px;border-bottom:1px solid var(--border2);font-family:var(--mono);font-size:11px;vertical-align:top}
+.scen-tbl tr:last-child td{border-bottom:none}
+
+/* ── CTA row ── */
+.cta-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.cta{padding:7px 13px;border:1px solid var(--border);border-radius:var(--br-md);font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text);transition:all 0.12s;font-family:var(--sans);outline:none}
+.cta:hover{background:var(--bg);border-color:var(--g1);color:var(--g1)}
+.cta.p{background:var(--g1);color:#fff;border-color:var(--g1)}
+.cta.p:hover{background:var(--g2)}
+.cta.a{background:var(--au);color:#fff;border-color:var(--au)}
+.cta.a:hover{background:#a0741a}
+.cta.ol{border-color:var(--g1);color:var(--g1)}
+.cta.ol:hover{background:var(--g3)}
+
+/* ── Loading ── */
+.spin{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--g1);border-radius:50%;animation:sp 0.7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.spin-l{font-size:11px;font-family:var(--mono);color:var(--text2)}
+
+/* ── Disclaimer ── */
+.disc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--br-md);padding:8px 11px;display:flex;align-items:flex-start;gap:7px;font-size:10.5px;color:var(--text3);line-height:1.55}
+.disc i{flex-shrink:0;margin-top:1px;font-size:13px;color:var(--text3)}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--dk);color:#fff;font-size:11px;font-family:var(--mono);padding:9px 15px;border-radius:var(--br-md);box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(50px);opacity:0;transition:all 0.22s;z-index:9999;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── Signal bar ── */
+.sig-track{height:3px;background:var(--border2);border-radius:2px;margin-top:5px}
+.sig-fill{height:3px;border-radius:2px;transition:width 0.5s ease}
+
+/* ── API code block ── */
+.codebox{background:#0f1a12;border-radius:var(--br-md);padding:12px 14px;font-family:var(--mono);font-size:11px;line-height:1.9;overflow-x:auto}
+.kw{color:#4ade80}.sv{color:#fbbf24}.nv{color:#93c5fd}.cm{color:#6b7280}
+
+/* ── Ep row ── */
+.ep{background:var(--bg);border-radius:var(--br-sm);padding:7px 11px;font-family:var(--mono);font-size:11px;display:flex;align-items:center;gap:8px;margin-bottom:5px;border:1px solid var(--border2)}
+.mth{padding:2px 6px;border-radius:3px;font-size:9.5px;font-weight:600;flex-shrink:0;font-family:var(--mono)}
+.get{background:#dbeafe;color:#1e40af}
+.post{background:#fce7f3;color:#9d174d}
+
+/* ── Pitch ── */
+.pitch-hero{border-left:3px solid var(--au);padding:12px 15px;background:rgba(184,132,30,0.04);border-radius:0 var(--br-lg) var(--br-lg) 0}
+.ph-title{font-size:15px;font-weight:600;line-height:1.3;margin-bottom:6px;color:var(--text)}
+.ph-sub{font-size:12.5px;color:var(--text2);line-height:1.7}
+
+/* ── Traction timeline ── */
+.tl-row{display:flex;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--br-md);align-items:center;margin-bottom:4px}
+.tl-date{font-size:10px;font-family:var(--mono);color:var(--text3);flex-shrink:0;min-width:58px}
+.tl-text{font-size:12px;flex:1;color:var(--text)}
+.tl-tag{font-size:9.5px;padding:2px 7px;border-radius:20px;font-family:var(--mono);font-weight:600;flex-shrink:0}
+
+/* ── Market pulse panel ── */
+.pulse{padding:10px 13px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--br-md)}
+.pulse-row{display:flex;justify-content:space-between;align-items:center;padding:3.5px 0;border-bottom:1px solid var(--border2)}
+.pulse-row:last-child{border-bottom:none}
+.pulse-k{font-size:11px;color:var(--text2)}
+.pulse-v{font-size:11px;font-family:var(--mono);font-weight:600}
+
+/* ── Scrollbar ── */
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-track{background:transparent}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<div class="shell">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tl">
+      <div class="logomark"><i class="ti ti-building-skyscraper"></i></div>
+      <div>
+        <div class="brand-name">HCIP<span class="brand-dot"></span></div>
+        <div class="brand-sub">Housing Credit Intelligence Platform · New York City</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="live-pill"><span class="live-dot"></span>Live data feed</div>
+      <nav class="nav">
+        <button class="nt on" id="nt-report" onclick="goNav('report',this)">Intelligence</button>
+        <button class="nt" id="nt-signals" onclick="goNav('signals',this)">Signals</button>
+        <button class="nt" id="nt-scenarios" onclick="goNav('scenarios',this)">Scenarios</button>
+        <button class="nt" id="nt-api" onclick="goNav('api',this)">API</button>
+        <button class="nt" id="nt-investors" onclick="goNav('investors',this)">Investors</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <!-- RAIL -->
+    <aside class="rail">
+      <div>
+        <div class="rl">Borough</div>
+        <div class="bg2">
+          <button class="bb on" onclick="selB(this)">Manhattan</button>
+          <button class="bb" onclick="selB(this)">Brooklyn</button>
+          <button class="bb" onclick="selB(this)">Queens</button>
+          <button class="bb" onclick="selB(this)">Bronx</button>
+          <button class="bb" onclick="selB(this)">Staten Is.</button>
+        </div>
+      </div>
+      <div>
+        <div class="rl">Property address</div>
+        <div class="inp-wrap">
+          <input type="text" id="addr" placeholder="e.g. 350 W 42nd St" autocomplete="off"/>
+          <i class="ti ti-map-pin"></i>
+        </div>
+      </div>
+      <div>
+        <div class="rl">Property type</div>
+        <div class="pg2">
+          <button class="pb on" onclick="selP(this)">Condo</button>
+          <button class="pb" onclick="selP(this)">Co-op</button>
+          <button class="pb" onclick="selP(this)">Multi-family</button>
+          <button class="pb" onclick="selP(this)">Townhouse</button>
+        </div>
+      </div>
+      <div>
+        <div class="rl">Estimated value</div>
+        <div class="inp-wrap">
+          <input type="text" id="val" placeholder="e.g. $1,200,000"/>
+          <i class="ti ti-currency-dollar"></i>
+        </div>
+      </div>
+      <button class="runbtn" id="runbtn" onclick="run()">
+        <i class="ti ti-file-analytics" style="font-size:14px"></i>
+        Pull intelligence report
+      </button>
+      <div class="div"></div>
+      <div>
+        <div class="rl">Recent reports</div>
+        <div class="ri" onclick="ql('420 W 25th St','Condo','$1,400,000','Manhattan')">
+          <div class="ri-a">420 W 25th St, Manhattan</div>
+          <div class="ri-m">Condo · 74 pts · 2h ago</div>
+        </div>
+        <div class="ri" onclick="ql('311 Graham Ave','Multi-family','$2,100,000','Brooklyn')">
+          <div class="ri-a">311 Graham Ave, Brooklyn</div>
+          <div class="ri-m">Multi-family · 61 pts · yesterday</div>
+        </div>
+        <div class="ri" onclick="ql('35-20 Linden Pl','Co-op','$680,000','Queens')">
+          <div class="ri-a">35-20 Linden Pl, Queens</div>
+          <div class="ri-m">Co-op · 52 pts · 3d ago</div>
+        </div>
+        <div class="ri" onclick="ql('1249 Prospect Pl','Townhouse','$1,950,000','Brooklyn')">
+          <div class="ri-a">1249 Prospect Pl, Brooklyn</div>
+          <div class="ri-m">Townhouse · 68 pts · 4d ago</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main" id="main">
+      <div id="emp" class="empty">
+        <i class="ti ti-building-skyscraper empty-ico"></i>
+        <div class="empty-t">Enter any NYC address</div>
+        <div class="empty-s">Pull financing conditions, credit signals, and scenario data — informational only, not advice.</div>
+        <div class="chips">
+          <span class="chip" onclick="ql('432 Park Ave','Condo','$3,800,000','Manhattan')">432 Park Ave</span>
+          <span class="chip" onclick="ql('200 Water St','Multi-family','$1,850,000','Brooklyn')">200 Water St, BK</span>
+          <span class="chip" onclick="ql('90-02 Queens Blvd','Co-op','$520,000','Queens')">90-02 Queens Blvd</span>
+          <span class="chip" onclick="ql('2780 Grand Concourse','Multi-family','$890,000','Bronx')">Grand Concourse, BX</span>
+        </div>
+        <div style="margin-top:16px">
+          <div class="pulse" style="max-width:265px">
+            <div class="sl" style="margin-bottom:8px">Today's market pulse</div>
+            <div class="pulse-row"><span class="pulse-k">30yr fixed avg</span><span class="pulse-v" style="color:var(--warn)">6.82%</span></div>
+            <div class="pulse-row"><span class="pulse-k">NYC conforming limit</span><span class="pulse-v">$1,149,825</span></div>
+            <div class="pulse-row"><span class="pulse-k">Manhattan median DOM</span><span class="pulse-v" style="color:var(--g1)">61 days</span></div>
+            <div class="pulse-row"><span class="pulse-k">CEMA availability</span><span class="pulse-v" style="color:var(--g1)">Active</span></div>
+          </div>
+        </div>
+      </div>
+      <div id="out" style="display:none;flex-direction:column;gap:11px"></div>
+    </main>
+  </div>
+</div>
+
+<script>
+var BV='Manhattan', PV='Condo', R=null, TAB='report';
+
+/* ── Helpers ── */
+function toast(m,d=2200){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+function sc(n){return n>65?'var(--g1)':n>50?'var(--au)':'var(--red)';}
+function clamp(n){return Math.min(100,Math.max(10,Math.round(n)));}
+function rnd(n){return Math.floor(Math.random()*n);}
+function fmt$(n){return '$'+Number(n).toLocaleString('en-US');}
+function tagCls(n,inv){const g=inv?n<50:n>65;const a=inv?(n>=50&&n<70):(n>50&&n<=65);return g?'tg':a?'ta':'tr';}
+function hide(){document.getElementById('emp').style.display='none';document.getElementById('out').style.display='flex';}
+
+/* ── Nav ── */
+function goNav(t,el){
+  document.querySelectorAll('.nt').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on'); TAB=t;
+  if(t==='signals'&&R) showSignals(R);
+  else if(t==='scenarios'&&R) showScenarios(R);
+  else if(t==='api') showAPI();
+  else if(t==='investors') showInvestors();
+  else if(t==='report'&&R) renderReport(R);
+  else{document.getElementById('emp').style.display='flex';document.getElementById('out').style.display='none';}
+}
+
+/* ── Sidebar selections ── */
+function selB(el){document.querySelectorAll('.bb').forEach(b=>b.classList.remove('on'));el.classList.add('on');BV=el.textContent.trim();toast('Borough: '+BV);}
+function selP(el){document.querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));el.classList.add('on');PV=el.textContent.trim();}
+function ql(a,p,v,boro){
+  document.getElementById('addr').value=a;
+  document.getElementById('val').value=v;
+  document.querySelectorAll('.pb').forEach(b=>b.classList.toggle('on',b.textContent.trim()===p));
+  PV=p;
+  if(boro){BV=boro;document.querySelectorAll('.bb').forEach(b=>b.classList.toggle('on',b.textContent.trim()===boro));}
+  if(TAB!=='report'&&TAB!=='signals'&&TAB!=='scenarios'){
+    document.querySelectorAll('.nt').forEach(b=>b.classList.remove('on'));
+    document.getElementById('nt-report').classList.add('on');TAB='report';
+  }
+  run();
+}
+
+/* ── Build report object ── */
+function build(addr,boro,prop,s,val){
+  const frs=clamp(s+rnd(14)-7);
+  const liq=clamp(s+rnd(16)-8);
+  const rfv=clamp(100-s+rnd(14)-7);
+  const exr=clamp(100-s+rnd(12)-6);
+  const comp=clamp(frs*0.30+liq*0.25+(100-rfv)*0.25+(100-exr)*0.20);
+  const rate=(6.52+Math.random()*0.42).toFixed(2);
+  const dti=(37+Math.random()*8).toFixed(1);
+  const ltv=(67+Math.random()*13).toFixed(1);
+  const jumbo=val>1149825;
+  const coop=prop==='Co-op';
+  const delinq=(0.85+Math.random()*1.2).toFixed(2);
+  const drift=((Math.random()*14)-5).toFixed(1);
+  const dom=Math.floor(42+Math.random()*85);
+  const encumb=(0.52+Math.random()*0.28).toFixed(2);
+  const loanAmt=Math.round(val*parseFloat(ltv)/100);
+  const priorSale=(1.5+Math.random()*5).toFixed(1);
+  const cemaEst=Math.round(loanAmt*0.018);
+  return{addr,boro,prop,s:comp,frs,liq,rfv,exr,rate,dti,ltv,jumbo,coop,delinq,drift,dom,encumb,val,loanAmt,priorSale,cemaEst};
+}
+
+/* ── Run ── */
+function run(){
+  const a=document.getElementById('addr').value.trim();
+  if(!a){document.getElementById('addr').focus();toast('Enter an address');return;}
+  hide();
+  const o=document.getElementById('out');
+  o.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:60px"><div class="spin"></div><div class="spin-l">Pulling NYC financing data…</div></div>';
+  document.getElementById('runbtn').disabled=true;
+  document.getElementById('runbtn').innerHTML='<i class="ti ti-loader" style="font-size:14px;animation:sp 0.7s linear infinite"></i> Analyzing…';
+  setTimeout(()=>{
+    const s=Math.floor(Math.random()*30)+47;
+    const v=parseInt((document.getElementById('val').value||'1200000').replace(/[^0-9]/g,''))||1200000;
+    R=build(document.getElementById('addr').value.trim(),BV,PV,s,v);
+    if(TAB==='signals') showSignals(R);
+    else if(TAB==='scenarios') showScenarios(R);
+    else renderReport(R);
+    document.getElementById('runbtn').disabled=false;
+    document.getElementById('runbtn').innerHTML='<i class="ti ti-file-analytics" style="font-size:14px"></i> Pull intelligence report';
+    toast('Report generated · HCIP: '+R.s+'/100');
+  },1700);
+}
+
+/* ═══════════════════════════════════════════
+   INTELLIGENCE REPORT
+═══════════════════════════════════════════ */
+function renderReport(r){
+  hide();
+  const o=document.getElementById('out');
+  const band=r.s>65?'Favorable conditions':r.s>50?'Mixed conditions':'Elevated risk';
+  const bandCls=r.s>65?'fg':r.s>50?'fa':'fr';
+  o.innerHTML=`
+  <div class="disc"><i class="ti ti-info-circle"></i><span>HCIP surfaces public financing data for informational purposes only. This is not financial, legal, or investment advice. Data is derived from public NYC sources and may be lagged. Consult a licensed professional before making any property decision.</span></div>
+
+  <!-- Header card -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+      <div>
+        <div class="rpt-addr">${r.addr}</div>
+        <div class="rpt-sub">${r.boro} · ${r.prop} · Est. ${r.val.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0})} · ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+        <div class="flag-row">
+          ${r.jumbo?'<span class="flg fa"><i class="ti ti-alert-triangle" style="font-size:10px"></i>Jumbo threshold</span>':''}
+          ${r.coop?'<span class="flg fr"><i class="ti ti-users" style="font-size:10px"></i>Co-op board required</span>':''}
+          ${parseFloat(r.delinq)>1.6?'<span class="flg fr"><i class="ti ti-trending-down" style="font-size:10px"></i>Elevated local defaults</span>':'<span class="flg fg"><i class="ti ti-check" style="font-size:10px"></i>Normal default rate</span>'}
+          ${parseFloat(r.drift)<-2?'<span class="flg fa"><i class="ti ti-trending-down" style="font-size:10px"></i>Comp softening</span>':''}
+          ${r.s>65?'<span class="flg fg"><i class="ti ti-currency-dollar" style="font-size:10px"></i>CEMA available</span>':''}
+        </div>
+      </div>
+      <div class="score-wrap">
+        <div class="score-n" style="color:${sc(r.s)}">${r.s}</div>
+        <div class="score-l">HCIP / 100</div>
+        <span class="score-band ${bandCls}">${band}</span>
+      </div>
+    </div>
+    <div class="sub4">
+      ${[
+        {k:'Loan difficulty',n:r.frs,h:'Higher = harder to finance. Incorporates jumbo status, co-op exposure, conforming eligibility, area DTI.'},
+        {k:'Sell-ability',n:r.liq,h:'Higher = more liquid market. Based on DOM, delinquency, price drift in comp cluster.'},
+        {k:'Refi exposure',n:r.rfv,h:'Lower = less exposed to rate risk. Based on MBS prepayment data and rate delta from loan vintage.'},
+        {k:'Exit pressure',n:r.exr,h:'Lower = cleaner exit path. Based on DOM trends, buyer depth, local credit stress.'},
+      ].map(ss=>`<div class="sc" title="${ss.h}">
+        <div class="sc-n" style="color:${sc(ss.n)}">${ss.n}</div>
+        <div class="sc-l">${ss.k}</div>
+        <div class="sc-bar" style="background:${sc(ss.n)};width:${ss.n}%"></div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- 4 metrics -->
+  <div class="m4">
+    <div class="mc"><div class="ml">30yr fixed (NYC)</div><div class="mv">${r.rate}%</div><div class="md ${parseFloat(r.rate)>6.8?'mwarn':'mgreen'}">${parseFloat(r.rate)>6.8?'above avg':'near avg'}</div></div>
+    <div class="mc"><div class="ml">Loan needed</div><div class="mv">${fmt$(Math.round(r.loanAmt/1000))}K</div><div class="md ${r.jumbo?'mwarn':'mgreen'}">${r.jumbo?'jumbo':'conforming'}</div></div>
+    <div class="mc"><div class="ml">Avg buyer DTI nearby</div><div class="mv">${r.dti}%</div><div class="md ${parseFloat(r.dti)>42?'mwarn':'mgreen'}">${parseFloat(r.dti)>42?'stretched':'healthy'}</div></div>
+    <div class="mc"><div class="ml">Avg days to sell</div><div class="mv">${r.dom}d</div><div class="md ${r.dom>90?'mwarn':'mgreen'}">${r.dom>90?'above normal':'normal pace'}</div></div>
+  </div>
+
+  <!-- Briefing -->
+  <div class="briefing">
+    <div class="brief-hdr">
+      <div class="brief-dot"></div>
+      <div class="brief-lbl">Data briefing</div>
+      <div class="brief-disc">informational only · not advice</div>
+    </div>
+    <div class="brief-txt" id="btxt">Generating briefing…</div>
+  </div>
+
+  <!-- Two-col: financing + notable conditions -->
+  <div class="two">
+    <div class="card">
+      <div class="sl">Financing conditions</div>
+      ${[
+        {l:'Rate environment',v:r.rate+'%',t:parseFloat(r.rate)>6.8?'ta':'tg'},
+        {l:'Loan type',v:r.jumbo?'Jumbo — non-conforming':'Conforming eligible',t:r.jumbo?'ta':'tg'},
+        {l:'Avg borrower DTI nearby',v:r.dti+'% DTI',t:parseFloat(r.dti)>42?'ta':'tg'},
+        {l:'Avg loan-to-value nearby',v:r.ltv+'%',t:parseFloat(r.ltv)>80?'tr':'tg'},
+        {l:'NYC CEMA refi option',v:r.s>65?'Structurally available':'Currently suppressed',t:r.s>65?'tg':'ta'},
+        {l:'Co-op board friction',v:r.coop?'Yes — approval required':'Not applicable',t:r.coop?'tr':'tg'},
+        {l:'Jumbo lender depth',v:r.jumbo?'Reduced (~40% of lenders)':'Full access',t:r.jumbo?'ta':'tg'},
+        {l:'Local delinquency rate',v:r.delinq+'%',t:parseFloat(r.delinq)>1.6?'tr':'tg'},
+      ].map(m=>`<div class="pm-row"><span class="pm-name">${m.l}</span><span class="pm-val">${m.v}</span><span class="pm-tag ${m.t}">${m.t==='tg'?'ok':m.t==='ta'?'watch':'note'}</span></div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="sl">Notable conditions</div>
+      <div id="obs-out"></div>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <button class="cta ol" onclick="goNav('signals',document.getElementById('nt-signals'))">View all 10 signals →</button>
+    <button class="cta ol" onclick="goNav('scenarios',document.getElementById('nt-scenarios'))">Rate scenarios →</button>
+    <button class="cta ol" onclick="goNav('api',document.getElementById('nt-api'))">API access →</button>
+  </div>
+  `;
+  fillObs(r);
+  streamBrief(r);
+}
+
+function fillObs(r){
+  const el=document.getElementById('obs-out');const obs=[];
+  if(r.jumbo) obs.push(['a','ti-alert-triangle',`<strong>Jumbo loan required.</strong> Est. loan (${fmt$(Math.round(r.loanAmt/1000))}K) exceeds NYC conforming limit. Lender pool narrows ~40%; rate premiums of 20–40bps are common.`]);
+  if(r.coop) obs.push(['r','ti-users',`<strong>Co-op board approval required.</strong> Board can reject post-agreement. Not reflected in standard listing timelines — add 45–90 days.`]);
+  if(parseFloat(r.delinq)>1.6) obs.push(['r','ti-trending-down',`<strong>Local default rate elevated (${r.delinq}%).</strong> Nearby comparable borrowers are above-average on delinquency — signals buyer fragility at resale.`]);
+  if(parseFloat(r.drift)<-2) obs.push(['a','ti-trending-down',`<strong>Comp cluster drift: ${r.drift}% this quarter.</strong> Closed sales in the immediate comp set show negative price movement vs. prior quarter.`]);
+  if(r.dom>90) obs.push(['a','ti-clock',`<strong>Extended market time (${r.dom} days avg).</strong> Comparable properties are averaging over 90 days to close — a liquidity signal.`]);
+  if(parseFloat(r.ltv)>80) obs.push(['r','ti-alert-triangle',`<strong>LTV above 80% (${r.ltv}%).</strong> PMI is typically required, raising the effective cost of financing.`]);
+  if(r.s>65) obs.push(['g','ti-building',`<strong>CEMA structurally available.</strong> NYC mortgage tax consolidation exemption applies — potential savings of ~${fmt$(r.cemaEst)} on a future refi. Unique to NY.`]);
+  if(!obs.length) obs.push(['g','ti-check','<strong>No material conditions flagged.</strong> Financing environment for this property shows no notable stress signals at current data snapshot.']);
+  el.innerHTML=obs.map(f=>`<div class="obs obs-${f[0]}"><i class="ti ${f[1]}"></i><div class="obs-body">${f[2]}</div></div>`).join('');
+}
+
+function streamBrief(r){
+  const el=document.getElementById('btxt');
+  const t=`The 30-year fixed rate is ${r.rate}%, ${parseFloat(r.rate)>6.8?'above':'near'} the recent 12-month average. ${r.dom>90?`Comp cluster is averaging ${r.dom} days to close — above the 90-day threshold and a signal of reduced liquidity.`:`Comp cluster is showing a ${r.dom}-day average time-to-close, within normal range.`}${r.jumbo?` The estimated loan (~${fmt$(Math.round(r.loanAmt/1000))}K) crosses the conforming limit — fewer lenders, modest rate premiums.`:''}${r.coop?' This property type introduces co-op board approval as a non-financial variable in any future transaction.':''} Local delinquency in the comp cluster is ${r.delinq}% — ${parseFloat(r.delinq)>1.6?'above average, worth tracking for resale liquidity':'within normal range'}. Comp cluster prices show ${r.drift}% movement this quarter. The HCIP composite for this address is ${r.s}/100 — derived from loan difficulty (${r.frs}), sell-ability (${r.liq}), refi exposure (${r.rfv}), and exit pressure (${r.exr}). This briefing reflects a point-in-time snapshot of public financing data. All interpretation and judgment remain with the user.`;
+  let i=0;el.innerHTML='';
+  const iv=setInterval(()=>{el.innerHTML=t.substring(0,i);i+=6;if(i>=t.length){el.innerHTML=t;clearInterval(iv);}},17);
+}
+
+/* ═══════════════════════════════════════════
+   SIGNALS
+═══════════════════════════════════════════ */
+function showSignals(r){
+  hide();const o=document.getElementById('out');
+  o.innerHTML=`
+  <div class="disc"><i class="ti ti-info-circle"></i><span>The following signals are derived from public NYC datasets. They are data observations, not recommendations. Each requires combining 2+ sources — none are surfaced on standard listing platforms.</span></div>
+  <div class="card">
+    <div class="sl" style="margin-bottom:4px">10 proprietary signals — ${r?r.addr:'subject property'}</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">Each signal requires combining multiple public NYC data sources. The source is listed under each entry.</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+    ${[
+      {n:'Local default rate (comp cluster)',v:r?(r.delinq+'%'):'1.84%',t:r&&parseFloat(r.delinq)>1.6?'tr':'tg',pct:r?Math.min(100,parseFloat(r.delinq)*28):52,s:'HMDA + NYS deed records',d:'Delinquency rate among borrowers who purchased in the immediate comp cluster (0.3mi, similar price band) in the trailing 12 months.'},
+      {n:'Loan difficulty score (FRS)',v:r?r.frs+'/100':'61/100',t:r&&r.frs>65?'tr':'ta',pct:r?r.frs:61,s:'HMDA + rate data + property type',d:'Composite of jumbo threshold, co-op board exposure, conforming eligibility, and area borrower DTI. Measures financing friction relative to NYC average.'},
+      {n:'Refinancing window status',v:r?(r.s>65?'Structurally open':'Suppressed'):'Narrowing',t:r&&r.s>65?'tg':'tr',pct:r?r.s:50,s:'MBS prepayment data + FRED rates',d:'Whether current rate delta vs. outstanding loan vintages in this cluster supports a net-positive refinancing outcome.'},
+      {n:'Comp cluster exit velocity',v:r?(r.dom+' day avg DOM'):'67 day avg',t:r&&r.dom>90?'tr':'tg',pct:r?Math.max(0,100-r.dom):65,s:'NYS ORPTS transfer records',d:'Average days-on-market for closed transactions within 0.25mi in the trailing 180 days, filtered by asset class.'},
+      {n:'Jumbo lender depth',v:r?(r.jumbo?'Reduced access':'Full access'):'Full',t:r&&r.jumbo?'ta':'tg',pct:r?(r.jumbo?35:88):88,s:'HMDA origination data + FHFA conforming limits',d:'Count of active lenders originating loans at subject LTV/loan amount in this zip in the trailing 12 months.'},
+      {n:'Co-op building encumbrance ratio',v:r?(r.encumb):'0.71',t:r&&parseFloat(r.encumb)>0.72?'tr':'tg',pct:r?Math.round(parseFloat(r.encumb)*100):71,s:'NYC DOF mortgage filings',d:'Ratio of outstanding underlying co-op mortgage to building assessed value. High encumbrance constrains individual unit financing options.'},
+      {n:'Area borrower DTI',v:r?(r.dti+'%'):'42.3%',t:r&&parseFloat(r.dti)>42?'ta':'tg',pct:r?Math.min(100,parseFloat(r.dti)*2.1):89,s:'HMDA loan-level data (trailing 12mo)',d:'Mean debt-to-income ratio of closed buyers in the comp cluster. Elevated DTI signals fragility to rate increases at resale.'},
+      {n:'Prior sale recency',v:r?(r.priorSale+'y ago'):'2.3y ago',t:'tg',pct:72,s:'NYC DOF deed transfers',d:'Time since this property last transacted. Short recency may indicate a speculative hold period worth investigating.'},
+      {n:'CEMA refinance availability',v:r?(r.s>65?'Available (~'+fmt$(r.cemaEst)+')':'Suppressed this cycle'):'Available',t:r&&r.s>65?'tg':'tr',pct:r?(r.s>65?82:18):82,s:'NYS mortgage tax statute + DOF filings',d:"NYC-specific: whether a CEMA (mortgage tax consolidation) applies. Can eliminate ~1.8% recording tax on a refi. Unique to New York. Not surfaced by any consumer platform."},
+      {n:'Comp cluster price drift (QoQ)',v:r?(r.drift+'%'):'−1.2%',t:r&&parseFloat(r.drift)<-2?'ta':'tg',pct:r?Math.max(0,50+parseFloat(r.drift)*4):48,s:'NYS ORPTS + HMDA price data',d:'Closed sale price change in the 10 nearest comparable transactions vs. the prior quarter — more granular than borough-level indices.'},
+    ].map((m,i)=>`
+    <div style="border:1px solid var(--border2);border-radius:var(--br-md);padding:10px 12px;background:var(--surface)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+        <span style="font-size:12.5px;font-weight:600;flex:1;color:var(--text)">${i+1}. ${m.n}</span>
+        <span style="font-size:13px;font-weight:600;font-family:var(--mono);color:var(--text)">${m.v}</span>
+        <span class="pm-tag ${m.t}">${m.t==='tg'?'ok':m.t==='ta'?'watch':'note'}</span>
+      </div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:4px">${m.s}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:5px">${m.d}</div>
+      <div class="sig-track"><div class="sig-fill" style="width:${m.pct}%;background:${m.t==='tg'?'var(--g1)':m.t==='ta'?'var(--au)':'var(--red)'}"></div></div>
+    </div>`).join('')}
+    </div>
+  </div>
+  <div class="cta-row">
+    <button class="cta ol" onclick="goNav('report',document.getElementById('nt-report'))">← Back to report</button>
+    <button class="cta ol" onclick="goNav('scenarios',document.getElementById('nt-scenarios'))">Rate scenarios →</button>
+    <button class="cta a" onclick="goNav('api',document.getElementById('nt-api'))">Access via API →</button>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   SCENARIOS
+═══════════════════════════════════════════ */
+function showScenarios(r){
+  hide();const o=document.getElementById('out');
+  o.innerHTML=`
+  <div class="disc"><i class="ti ti-info-circle"></i><span>Scenario projections are modeled estimates based on historical rate-sensitivity relationships in NYC residential markets. They are illustrative, not predictive. Actual outcomes will vary.</span></div>
+  <div class="card">
+    <div class="sl" style="margin-bottom:9px">Rate sensitivity — ${r?r.addr:'subject property'}</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:13px;line-height:1.6">What historical data suggests about financing conditions at different rate levels. Current rate: <strong style="font-family:var(--mono)">${r?r.rate+'%':'6.74%'}</strong></div>
+    <table class="scen-tbl">
+      <thead><tr>
+        <th style="width:17%">Scenario</th>
+        <th style="width:18%">LTV impact</th>
+        <th style="width:16%">Refi viability</th>
+        <th style="width:19%">Purchase demand</th>
+        <th style="width:15%">DOM trend</th>
+        <th style="width:15%">Liquidity</th>
+      </tr></thead>
+      <tbody>
+        ${[
+          {d:'Rates −2%',lv:'Eases ~3–4pp',rf:'Strong',pd:'+18–22%',dom:'Shorter',liq:'Elevated',hi:true},
+          {d:'Rates −1%',lv:'Eases ~1–2pp',rf:'Viable',pd:'+10–14%',dom:'Normal',liq:'Normal',hi:false},
+          {d:`Current (${r?r.rate+'%':'6.7%'})`,lv:'Baseline',rf:r&&r.s>65?'Viable':'Suppressed',pd:'Baseline',dom:r?(r.dom+'d avg'):'67d avg',liq:r&&r.s>65?'Normal':'Reduced',cur:true},
+          {d:'Rates +1%',lv:'Tightens ~1–2pp',rf:'Unlikely',pd:'−10–15%',dom:'Longer',liq:'Reduced',hi:false},
+          {d:'Rates +2%',lv:'Tightens ~3pp',rf:'Impaired',pd:'−20–26%',dom:'Extended',liq:'Constrained',hi:false},
+        ].map(row=>`<tr style="${row.cur?'background:rgba(26,94,54,0.04)':''}">
+          <td style="${row.cur?'font-weight:600':'color:var(--text2)'}">${row.d}</td>
+          <td style="color:${row.hi?'var(--g1)':row.lv.includes('Tight')?'var(--red)':'var(--text2)'}">${row.lv}</td>
+          <td style="color:${row.rf==='Strong'||row.rf==='Viable'?'var(--g1)':row.rf==='Impaired'?'var(--red)':'var(--au)'}">${row.rf}</td>
+          <td style="color:${row.pd.startsWith('+')?'var(--g1)':row.pd.startsWith('−')?'var(--red)':'var(--text2)'}">${row.pd}</td>
+          <td style="color:${row.dom==='Shorter'?'var(--g1)':row.dom==='Extended'?'var(--red)':'var(--text2)'}">${row.dom}</td>
+          <td style="color:${row.liq==='Elevated'||row.liq==='Normal'?'var(--g1)':row.liq==='Constrained'?'var(--red)':'var(--au)'}">${row.liq}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="sl" style="margin-bottom:9px">NYC-specific rate context</div>
+    ${[
+      {l:'Jumbo rate sensitivity',v:'Rate premium compounds with base rate — more volatile above 7%'},
+      {l:'Co-op board approval cycles',v:'Board approval rates historically drop 15–20% in elevated-rate environments'},
+      {l:'CEMA activation window',v:'Most viable when rate delta exceeds 1% from original loan vintage'},
+      {l:'Outer borough cushion',v:'Queens and Bronx historically show lower rate sensitivity than Manhattan and prime BK'},
+      {l:'CEMA estimated savings',v:r?`~${fmt$(r.cemaEst)} on a future refinance at current LTV`:'~$18K on a $1M loan (1.8% of loan amount)'},
+    ].map(m=>`<div class="pm-row"><span class="pm-name">${m.l}</span><span class="pm-val" style="max-width:280px;text-align:right;font-size:11px;font-family:var(--sans);color:var(--text2);font-weight:400">${m.v}</span></div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="sl" style="margin-bottom:9px">Property-level stress test — ${r?r.addr:'N/A'}</div>
+    <div class="m4" style="margin-bottom:10px">
+      <div class="mc"><div class="ml">Current monthly P&I</div><div class="mv" style="font-size:14px">${r?fmt$(Math.round(r.loanAmt*(parseFloat(r.rate)/100/12)*Math.pow(1+parseFloat(r.rate)/100/12,360)/(Math.pow(1+parseFloat(r.rate)/100/12,360)-1))):'$5,840'}</div><div class="md mgrey">at ${r?r.rate+'%':'6.74%'}</div></div>
+      <div class="mc"><div class="ml">At +1% (${r?(parseFloat(r.rate)+1).toFixed(2)+'%':'7.74%'})</div><div class="mv" style="font-size:14px;color:var(--warn)">${r?fmt$(Math.round(r.loanAmt*((parseFloat(r.rate)+1)/100/12)*Math.pow(1+(parseFloat(r.rate)+1)/100/12,360)/(Math.pow(1+(parseFloat(r.rate)+1)/100/12,360)-1))):'$6,350'}</div><div class="md mwarn">~+${r?fmt$(Math.round(r.loanAmt*((parseFloat(r.rate)+1)/100/12)*Math.pow(1+(parseFloat(r.rate)+1)/100/12,360)/(Math.pow(1+(parseFloat(r.rate)+1)/100/12,360)-1)-r.loanAmt*(parseFloat(r.rate)/100/12)*Math.pow(1+parseFloat(r.rate)/100/12,360)/(Math.pow(1+parseFloat(r.rate)/100/12,360)-1))):'$510'}/mo</div></div>
+      <div class="mc"><div class="ml">At −1% (${r?(parseFloat(r.rate)-1).toFixed(2)+'%':'5.74%'})</div><div class="mv" style="font-size:14px;color:var(--g1)">${r?fmt$(Math.round(r.loanAmt*((parseFloat(r.rate)-1)/100/12)*Math.pow(1+(parseFloat(r.rate)-1)/100/12,360)/(Math.pow(1+(parseFloat(r.rate)-1)/100/12,360)-1))):'$5,360'}</div><div class="md mgreen">~-${r?fmt$(Math.round(r.loanAmt*(parseFloat(r.rate)/100/12)*Math.pow(1+parseFloat(r.rate)/100/12,360)/(Math.pow(1+parseFloat(r.rate)/100/12,360)-1)-r.loanAmt*((parseFloat(r.rate)-1)/100/12)*Math.pow(1+(parseFloat(r.rate)-1)/100/12,360)/(Math.pow(1+(parseFloat(r.rate)-1)/100/12,360)-1))):'$480'}/mo</div></div>
+      <div class="mc"><div class="ml">Loan amount</div><div class="mv" style="font-size:14px">${r?fmt$(Math.round(r.loanAmt/1000))+'K':'$820K'}</div><div class="md ${r&&r.jumbo?'mwarn':'mgreen'}">${r&&r.jumbo?'jumbo':'conforming'}</div></div>
+    </div>
+    <div class="disc" style="margin-top:0"><i class="ti ti-calculator"></i><span>Monthly P&I calculated using standard 30-year amortization at current published rates. Does not include taxes, insurance, HOA, or PMI. Illustrative only.</span></div>
+  </div>
+  <div class="cta-row">
+    <button class="cta ol" onclick="goNav('report',document.getElementById('nt-report'))">← Back to report</button>
+    <button class="cta ol" onclick="goNav('signals',document.getElementById('nt-signals'))">View all signals →</button>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   API TAB
+═══════════════════════════════════════════ */
+function showAPI(){
+  hide();const o=document.getElementById('out');
+  const ex=R?R.addr:'420 W 25th St, Manhattan';
+  const exS=R?R.s:74;
+  o.innerHTML=`
+  <div class="card">
+    <div class="sl" style="margin-bottom:10px">API reference</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Base URL: <span style="font-family:var(--mono);color:var(--g1);font-weight:600">https://api.hcip.io/v1</span></div>
+    ${[
+      ['GET','/v1/report','Full HCIP report with all scores, flags, and data briefing'],
+      ['GET','/v1/signals/{address}','All 10 proprietary signals for one address'],
+      ['GET','/v1/scenarios','Rate sensitivity projections (±100–200bps)'],
+      ['POST','/v1/portfolio','Batch analysis — up to 100 properties'],
+      ['GET','/v1/borough/{name}/pulse','Borough-level financing health snapshot'],
+      ['GET','/v1/cema/{address}','CEMA eligibility check and estimated savings'],
+    ].map(e=>`<div class="ep"><span class="mth ${e[0]==='POST'?'post':'get'}">${e[0]}</span><span style="flex:1;font-weight:600">${e[1]}</span><span style="font-size:10.5px;color:var(--text3)">${e[2]}</span></div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="sl" style="margin-bottom:10px">Sample response — GET /v1/report</div>
+    <div class="codebox"><span class="kw">{</span><br>
+&nbsp;<span class="kw">"address"</span>: <span class="sv">"${ex}"</span>,<br>
+&nbsp;<span class="kw">"hcip_score"</span>: <span class="nv">${exS}</span>,<br>
+&nbsp;<span class="kw">"scores"</span>: <span class="kw">{</span><br>
+&nbsp;&nbsp;<span class="kw">"loan_difficulty"</span>: <span class="nv">${R?R.frs:71}</span>, <span class="kw">"sell_ability"</span>: <span class="nv">${R?R.liq:65}</span>,<br>
+&nbsp;&nbsp;<span class="kw">"refi_exposure"</span>: <span class="nv">${R?R.rfv:38}</span>, <span class="kw">"exit_pressure"</span>: <span class="nv">${R?R.exr:41}</span><br>
+&nbsp;<span class="kw">}</span>,<br>
+&nbsp;<span class="kw">"flags"</span>: [${R&&R.jumbo?'<span class="sv">"jumbo_loan_required"</span>, ':''}<span class="sv">"local_defaults_${R&&parseFloat(R.delinq)>1.6?'elevated':'normal'}"</span>],<br>
+&nbsp;<span class="kw">"rate"</span>: <span class="sv">"${R?R.rate:'6.74'}%"</span>,<br>
+&nbsp;<span class="kw">"loan_amount"</span>: <span class="nv">${R?Math.round(R.loanAmt/1000)+'000':820000}</span>,<br>
+&nbsp;<span class="kw">"loan_type"</span>: <span class="sv">"${R?(R.jumbo?'jumbo':'conforming'):'conforming'}"</span>,<br>
+&nbsp;<span class="kw">"avg_dom"</span>: <span class="nv">${R?R.dom:67}</span>,<br>
+&nbsp;<span class="kw">"cema_available"</span>: <span class="nv">${R?(R.s>65?'true':'false'):'true'}</span>,<br>
+&nbsp;<span class="kw">"cema_savings_est"</span>: <span class="nv">${R?R.cemaEst:18400}</span>,<br>
+&nbsp;<span class="kw">"local_delinquency"</span>: <span class="sv">"${R?R.delinq:'1.42'}%"</span>,<br>
+&nbsp;<span class="kw">"comp_price_drift_qoq"</span>: <span class="sv">"${R?R.drift:'+1.2'}%"</span>,<br>
+&nbsp;<span class="kw">"generated_at"</span>: <span class="sv">"${new Date().toISOString()}"</span><br>
+<span class="kw">}</span></div>
+  </div>
+  <div class="card">
+    <div class="sl" style="margin-bottom:10px">Pricing tiers</div>
+    <div class="three">
+      ${[
+        {n:'Broker',p:'$99',u:'/mo · 500 reports/mo',f:['Full report + signals','CEMA check','Risk flags + briefing','Standard rate limits'],gold:false},
+        {n:'Platform',p:'$499',u:'/mo · 5,000 reports/mo',f:['All Broker features','Portfolio batch endpoint','Scenario projections API','Webhooks + data refresh','Priority support'],gold:true},
+        {n:'Enterprise',p:'Custom',u:'Unlimited · SLA',f:['White-label output','Custom data feeds','Dedicated infrastructure','Co-branded PDF export','Custom model tuning'],gold:false},
+      ].map(t=>`<div style="border:${t.gold?'1.5px solid var(--au)':'1px solid var(--border2)'};border-radius:var(--br-lg);padding:12px;background:${t.gold?'rgba(184,132,30,0.03)':'var(--surface)'}">
+        <div style="font-size:9.5px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px">${t.n}${t.gold?' <span style="color:var(--au)">★ popular</span>':''}</div>
+        <div style="font-size:22px;font-weight:600;font-family:var(--mono);color:${t.gold?'var(--au)':'var(--text)'}">${t.p}</div>
+        <div style="font-size:10.5px;color:var(--text2);margin-bottom:9px;font-family:var(--mono)">${t.u}</div>
+        ${t.f.map(f=>`<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text2);padding:3px 0;border-bottom:1px solid var(--border2)"><i class="ti ti-check" style="color:var(--g1);font-size:11px;flex-shrink:0"></i>${f}</div>`).join('')}
+        <button class="cta ${t.gold?'a':'ol'}" style="margin-top:10px;width:100%;justify-content:center;display:flex" onclick="toast('Request received — we\\'ll follow up within 24h ✓')">Get access →</button>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="cta-row">
+    <button class="cta p" onclick="toast('API key copied: hcip_live_sk_demo_8xK2… (prototype)')">Copy demo API key</button>
+    <button class="cta ol" onclick="goNav('investors',document.getElementById('nt-investors'))">View investor deck →</button>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   INVESTORS
+═══════════════════════════════════════════ */
+function showInvestors(){
+  hide();const o=document.getElementById('out');
+  o.innerHTML=`
+  <div class="pitch-hero">
+    <div class="ph-title">The only property-level financing intelligence tool built for New York City.</div>
+    <div class="ph-sub">Not a listings tool. Not a macro dashboard. A financing health report for every NYC address — built on data no consumer platform currently models. We start in NYC because it is the most complex residential financing market in the US, and the public data to do it right exists today.</div>
+  </div>
+
+  <div class="m4">
+    ${[
+      ['NYC RE investors','650K+','addressable users'],
+      ['NYC mortgage volume','$51B/yr','total originations'],
+      ['B2B contract range','$1–60K','per customer/year'],
+      ['Pre-seed ask','$350K','18-month runway'],
+    ].map(m=>`<div class="mc"><div class="ml">${m[0]}</div><div class="mv">${m[1]}</div><div class="md mgrey">${m[2]}</div></div>`).join('')}
+  </div>
+
+  <div class="card">
+    <div class="sl" style="margin-bottom:10px">Why this, why now</div>
+    <div class="three">
+      ${[
+        {ico:'ti-shield-lock',t:'Data moat from day one',s:'10 derived signals — CEMA availability, co-op encumbrance ratios, comp-cluster default rates — impossible to replicate from listing data alone. 2–3 years to build; none exist as a finished product.'},
+        {ico:'ti-plug',t:'Built for B2B revenue',s:'Mortgage brokers, proptech apps, and debt funds pay $99–499/mo to embed this intelligence. One enterprise contract = $6K–60K/yr. Consumer demo is the acquisition layer.'},
+        {ico:'ti-trending-up',t:'Rate volatility is the tailwind',s:'At 6.8%+, financing awareness is survival for RE investors. Demand is live today and grows as rates stay elevated. We are not betting on a trend — we are responding to a live market condition.'},
+      ].map(c=>`<div style="border:1px solid var(--border2);border-radius:var(--br-md);padding:12px;background:var(--surface)">
+        <i class="ti ${c.ico}" style="font-size:18px;color:var(--au);margin-bottom:7px;display:block"></i>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text)">${c.t}</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">${c.s}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <div class="sl" style="margin-bottom:9px">What HCIP does</div>
+      ${['Surfaces financing conditions for any NYC address','Shows 10 proprietary signals derived from public data','Provides a neutral factual data briefing','Runs rate sensitivity scenarios based on historical data','Flags notable conditions: jumbo, co-op, delinquency, CEMA'].map(i=>`<div style="display:flex;gap:7px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border2);font-size:12px;color:var(--text2)"><i class="ti ti-check" style="color:var(--g1);font-size:12px;flex-shrink:0;margin-top:1px"></i>${i}</div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="sl" style="margin-bottom:9px">What HCIP does not do</div>
+      ${['Tell you to buy, sell, hold, or refinance','Predict future prices or market direction','Replace a licensed broker, advisor, or attorney','Guarantee data accuracy — sources may lag','Provide legal, financial, or investment advice'].map(i=>`<div style="display:flex;gap:7px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border2);font-size:12px;color:var(--text2)"><i class="ti ti-x" style="color:var(--red);font-size:12px;flex-shrink:0;margin-top:1px"></i>${i}</div>`).join('')}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sl" style="margin-bottom:9px">Traction & milestones</div>
+    ${[
+      {d:'Q1 2025',e:'MVP built · 3 NYC mortgage broker pilots signed',s:'tg'},
+      {d:'Q2 2025',e:'HMDA + DOF data pipelines live · 10 signals validated',s:'tg'},
+      {d:'Q3 2025',e:'Platform tier launched · first $499/mo contract closed',s:'tg'},
+      {d:'Q4 2025',e:'Target: 20 paying API customers · begin Series A conversations',s:'ta'},
+    ].map(m=>`<div class="tl-row"><span class="tl-date">${m.d}</span><span class="tl-text">${m.e}</span><span class="tl-tag ${m.s}">${m.s==='tg'?'done':'target'}</span></div>`).join('')}
+  </div>
+
+  <div class="card">
+    <div class="sl" style="margin-bottom:9px">Data sources</div>
+    ${[
+      {n:'HMDA',full:'Home Mortgage Disclosure Act',lag:'Annual',use:'Borrower DTI, LTV, delinquency, lender originations by zip'},
+      {n:'NYC DOF',full:'NYC Dept. of Finance filings',lag:'Monthly',use:'Deed transfers, co-op encumbrance, prior sale prices'},
+      {n:'NYS ORPTS',full:'NY Office of Real Property Tax Services',lag:'Quarterly',use:'Closed sale prices, days-on-market proxy, comp clusters'},
+      {n:'FRED',full:'Federal Reserve Economic Data',lag:'Real-time',use:'30yr fixed rate, mortgage credit conditions index'},
+      {n:'FHFA',full:'Federal Housing Finance Agency',lag:'Annual',use:'Conforming loan limits by county, price index'},
+    ].map(s=>`<div class="pm-row"><span style="font-size:11.5px;font-weight:600;width:72px;flex-shrink:0;font-family:var(--mono);color:var(--text)">${s.n}</span><span class="pm-name">${s.full} · <span style="color:var(--text3)">${s.use}</span></span><span class="pm-tag ${s.lag==='Real-time'?'tg':'ta'}">${s.lag}</span></div>`).join('')}
+  </div>
+
+  <div class="card">
+    <div class="sl" style="margin-bottom:9px">Honest objections — answered</div>
+    ${[
+      {q:'"Zillow could just build this."','a':'Zillow\'s product is listings discovery — their incentive is transaction volume, not underwriting depth. Their consumer UX would reject this output. We sell to brokers and debt funds who need something Zillow will never prioritize.'},
+      {q:'"The data is public — anyone can replicate this."','a':'The raw data is public. The derived signals are not. CEMA availability modeling, co-op encumbrance ratios, comp-cluster default deltas — none exist as a finished product. The moat is in the signal engineering, not the source data.'},
+      {q:'"HMDA is a year behind."','a':'True. We layer real-time FRED rates and monthly NYC DOF filings over HMDA as the base. We disclose the lag clearly. The derived signals still have edge over anything a consumer currently has access to.'},
+    ].map(q=>`<div style="border:1px solid var(--border2);border-radius:var(--br-md);padding:10px 12px;background:var(--surface);margin-bottom:6px">
+      <div style="font-size:11px;font-family:var(--mono);color:var(--red);margin-bottom:4px;font-weight:600">${q.q}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.65">${q.a}</div>
+    </div>`).join('')}
+  </div>
+
+  <div class="cta-row">
+    <button class="cta p" onclick="toast('Generating pitch deck PDF… (prototype)')">Download pitch deck</button>
+    <button class="cta a" onclick="toast('Opening calendar link… (prototype)')">Schedule intro call</button>
+    <button class="cta ol" onclick="goNav('api',document.getElementById('nt-api'))">See API pricing →</button>
+  </div>`;
+}
+
+/* ── Auto-load on open ── */
+window.addEventListener('load',()=>setTimeout(()=>ql('420 W 25th St','Condo','$1,400,000','Manhattan'),400));
+</script>
+</body>
+</html>
